@@ -1,28 +1,22 @@
-<<<<<<< HEAD
-# Use Node 20 as required by Medusa
+# Use Node 20
 FROM node:20
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files
+# Copy package files and install deps
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
 
-# Copy entire app
+# Copy the rest of the app
 COPY . .
+
+# Set environment variables (optional if you're using ECS secrets)
+ENV NODE_ENV=production
+ENV PORT=9000
 
 # Expose port
 EXPOSE 9000
 
-# Start the server
+# Start Medusa
 CMD ["npm", "run", "start"]
-=======
-FROM medusa/medusa:latest
-WORKDIR /app
-COPY . .
-RUN npm install
-CMD ["medusa", "start"]
->>>>>>> ad11237cfc4c4d1c657ed4624142cd7f8ac2f4e5
