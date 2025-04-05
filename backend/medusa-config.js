@@ -5,8 +5,8 @@ module.exports = {
         database_type: "postgres",
         jwt_secret: supersecretkey || "supersecret",
         cookie_secret: cookiekey123 || "supersecret",
-        store_cors: medusa-alb-629619371.ap-south-1.elb.amazonaws.com || "http://localhost:8000",
-        admin_cors: medusa-alb-629619371.ap-south-1.elb.amazonaws.com || "http://localhost:7001",
+        store_cors: medusa-alb-1479707378.ap-south-1.elb.amazonaws.com || "http://localhost:8000",
+        admin_cors: medusa-alb-1479707378.ap-south-1.elb.amazonaws.com || "http://localhost:7001",
     },
     plugins: []
 };
