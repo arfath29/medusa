@@ -35,6 +35,12 @@ jobs:
     - name: Debug ECR registry
       run: echo "${{ steps.login-ecr.outputs.registry }}"
 
+    - name: Create ECR Repository (if not exists)
+      run: |
+       aws ecr describe-repositories --repository-names $ECR_REPOSITORY --region $AWS_REGION || \
+       aws ecr create-repository --repository-name $ECR_REPOSITORY --region $AWS_REGION
+
+
     - name: Build, tag, and push image to Amazon ECR
       id: build-image
       env:
