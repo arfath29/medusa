@@ -109,6 +109,54 @@ resource "aws_iam_role" "ecs_task_role" {
     }]
   })
 }
+resource "aws_iam_role_policy_attachment" "ecs_task_role_policy" {
+  role       = aws_iam_role.ecs_task_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess" # example
+}
+resource "aws_iam_role" "ecr_push_role" {
+  name = "ecr-push-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Service = "ec2.amazonaws.com" # or your CI/CD service principal
+      }
+      Action = "sts:AssumeRole"
+    }]
+  })
+}
+
+resource "aws_iam_policy" "ecr_push_policy" {
+  name        = "ecr-push-policy"
+  description = "Policy to allow pushing Docker images to ECR"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecr:GetAuthorizationToken",
+          "ecr:BatchCheckLayerAvailability",
+          "ecr:PutImage",
+          "ecr:InitiateLayerUpload",
+          "ecr:UploadLayerPart",
+          "ecr:CompleteLayerUpload",
+          "ecr:BatchGetImage"
+        ]
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ecr_push_attachment" {
+  role       = aws_iam_role.ecr_push_role.name
+  policy_arn = aws_iam_policy.ecr_push_policy.arn
+}
+
 
 resource "aws_cloudwatch_log_group" "medusa" {
   name              = "/ecs/medusa"
